@@ -5,11 +5,11 @@
 #include <string.h>
 
 #define CYCLE_RATE sysconf(_SC_CLK_TCK)
-#define RESET_CPU cpu_total=0, cpu_user_mode=0, cpu_system_mode=0, cpu_idle=0, cpu_arr=0
-#define RESET_MEM mem_total=0, mem_free=0
-#define RESET_DISK disk_sectors_read=0, disk_sectors_written=0, disk_time_spent_reading=0, disk_time_spent_writing=0, disk_arr=NULL
-#define RESET_KERNEL kernel_switches=0, kernel_switch_rate=0
-#define RESET_PROC processes_created=0
+// #define RESET_CPU cpu_total=0, cpu_user_mode=0, cpu_system_mode=0, cpu_idle=0
+// #define RESET_MEM mem_total=0, mem_free=0
+// #define RESET_DISK disk_sectors_read=0, disk_sectors_written=0, disk_time_spent_reading=0, disk_time_spent_writing=0
+// #define RESET_KERNEL kernel_switches=0, kernel_switch_rate=0
+// #define RESET_PROC processes_created=0
 
 
 void run_default();
@@ -182,11 +182,6 @@ int main(int argc, char **argv){
 					*/
 
 					read_start_time = time(NULL);
-					RESET_CPU;
-					RESET_MEM;
-					RESET_DISK;
-					RESET_KERNEL;
-					RESET_PROC;
 				}
 
 				if((cur_time - print_start_time)+1 > (printout_rate)){//PRINT
@@ -196,7 +191,7 @@ int main(int argc, char **argv){
 
 						cpu (user mode) (user mode low) (system mode) (idle) (iowait) (irq) (softirq) (steal) (guest) (guest_nice)
 					*/
-						printf("\n\n\u2022 Time spend in:\n \tUser mode: %lf%%\n\tSystem mode: %lf%%\n\tIn idle: %lf%%\n", cpu_user_mode/cpu_total, cpu_system_mode/cpu_total, cpu_idle/cpu_total);
+						printf("\n\n\u2022 Time spend in:\n \tUser mode: %lf%%\n\tSystem mode: %lf%%\n\tIn idle: %lf%%\n", 100*cpu_user_mode/cpu_total, 100*cpu_system_mode/cpu_total, 100*cpu_idle/cpu_total);
 					/*
 
 					*/
@@ -216,7 +211,7 @@ int main(int argc, char **argv){
 						The rate (number of sectors per second) of disk read/write in the system
 					*/
 						printf("\u2022 Disk rates: \n\tReads (sectors/second): %lf\n\tWrites (sectors/second) %lf\n", 
-							(disk_sectors_read/(disk_time_spent_reading)/1000),(disk_sectors_written/(disk_time_spent_writing)/1000));
+							(disk_sectors_read/(disk_time_spent_reading)/.0001),(disk_sectors_written/(disk_time_spent_writing))/.0001);
 					/*
 
 					*/
@@ -239,8 +234,14 @@ int main(int argc, char **argv){
 					*/
 					printf("\n#############################################");
 					print_start_time = time(NULL);
+
+					// RESET_CPU;
+					// RESET_MEM;
+					// RESET_DISK;
+					// RESET_KERNEL;
+					// RESET_PROC;
+					// count = 1;
 				}
-				
 		}
 	}
 	return 0;
