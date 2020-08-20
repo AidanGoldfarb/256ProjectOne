@@ -1,4 +1,4 @@
-# 256ProjectOne
+# 256 Project One
 
 ## Part I
 Reads data from the kernel and prints it in an informative format.
