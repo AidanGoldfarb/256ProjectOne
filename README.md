@@ -1,5 +1,7 @@
 # 256 Project One
 
+![Platform](https://img.shields.io/badge/Platform-Linux-brightgreen)
+
 ## Part I
 Reads data from the kernel and prints it in an informative format.
 
