@@ -11,26 +11,26 @@ Reads data from the kernel and prints it in an informative format.
 ### Requirements
   - *In this part, you are asked to write a program to report the behavior of the Linux kernel. Your program should run in two different versions*
   - **Version One:**
-  Prints
-    - Processor type
-      - Parsed from `/proc/cpuinfo`
-    - Kernel version
-      - Parsed from `/proc/version`
-    - Amount of configured memory
-      - Parsed from `/proc/meminfo`
-    - Uptime
-      - Parsed from `/proc/uptime`
-    to `stdout`
+    - Prints to `stdout`
+      - Processor type
+        - Parsed from `/proc/cpuinfo`
+      - Kernel version
+        - Parsed from `/proc/version`
+      - Amount of configured memory
+        - Parsed from `/proc/meminfo`
+      - Uptime
+        - Parsed from `/proc/uptime`
+    
    
    - **Version Two:**
-   Prints continuously (per print_rate)
-     - The percentage of time the processor(s) spend in user mode, system mode, and the percentage of time the processor(s) are idle
-       - Parsed from `/proc/stat`
-     - The amount and percentage of available (or free) memory
-       - Parsed from `/proc/meminfo`
-     - The rate (number of sectors per second) of disk read/write in the system
-       - Parsed from `/proc/diskstats/`
-     - The rate (number per second) of context switches in the kernel
-       - Parsed from `/proc/stat`
-     - The rate (number per second) of process creations in the system
-       - Parsed from `/proc/loadavg`
+     - Prints continuously based on print_rate
+       - The percentage of time the processor(s) spend in user mode, system mode, and the percentage of time the processor(s) are idle
+         - Parsed from `/proc/stat`
+       - The amount and percentage of available (or free) memory
+         - Parsed from `/proc/meminfo`
+       - The rate (number of sectors per second) of disk read/write in the system
+         - Parsed from `/proc/diskstats/`
+       - The rate (number per second) of context switches in the kernel
+         - Parsed from `/proc/stat`
+       - The rate (number per second) of process creations in the system
+         - Parsed from `/proc/loadavg`
