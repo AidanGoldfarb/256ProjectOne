@@ -32,6 +32,7 @@ int main(int argc, char **argv){
 			int printout_rate = atoi(argv[2]);
 			time_t read_start_time = time(NULL);
 			time_t print_start_time = time(NULL);
+			int uptime;
 			long count = 0;
 		/*
 		*/
@@ -65,7 +66,7 @@ int main(int argc, char **argv){
 		/*
 			Kernel context switch vars
 		*/
-			double kernel_switches;
+			double kernel_switches, kernel_switch_rate;
 		/*
 
 		*/
@@ -73,7 +74,7 @@ int main(int argc, char **argv){
 		/*
 			Process creation vars
 		*/
-		//double process_creation_rate;
+			double processes_created;
 		/*
 
 		*/
@@ -82,8 +83,9 @@ int main(int argc, char **argv){
 				
 				if((cur_time - read_start_time) > read_rate){ //READ
 					++count;
-
-					//arr = [SECTORS_READ, SECTORS_WRITTEN, READ_TIME, WRITE_TIME]
+					FILE *uptime_pipe = popen("/bin/cat /proc/uptime", "r");
+					fgets(buf, sizeof(buf), uptime_pipe);
+					uptime = atof(buf);
 					
 
 					/*
@@ -149,10 +151,15 @@ int main(int argc, char **argv){
 					/*
 						The rate (number per second) of context switches in the kernel
 					*/
-						pipe = popen("/bin/cat /proc/stats | grep ctxt", "r");
+						pipe = popen("/bin/cat /proc/stat | grep ctxt", "r");
 						fgets(buf, sizeof(buf), pipe);
-						kernel_switches = atof(buf);
-						printf("KKKK: %s\n ::%f\n", buf, kernel_switches);
+						kernel_switches = atof(buf+5);
+						
+						kernel_switch_rate = kernel_switches/uptime;
+
+						pclose(pipe);
+						pclose(uptime_pipe);
+
 					/*
 
 					*/
@@ -161,7 +168,9 @@ int main(int argc, char **argv){
 					/*
 						The rate (number per second) of process creations in the system
 					*/
-						
+						pipe = popen("/bin/cat /proc/loadavg", "r");
+						fgets(buf, sizeof(buf), pipe);
+						processes_created = atof(buf+17);
 					/*
 					
 					*/
@@ -176,7 +185,7 @@ int main(int argc, char **argv){
 
 						cpu (user mode) (user mode low) (system mode) (idle) (iowait) (irq) (softirq) (steal) (guest) (guest_nice)
 					*/
-						printf("Time spend in:\n \tUser mode: %lf%%\n\tSystem mode: %lf%%\n\tIn idle: %lf%%\n", cpu_user_mode/cpu_total, cpu_system_mode/cpu_total, cpu_idle/cpu_total);
+						printf("\n\n\u2022 Time spend in:\n \tUser mode: %lf%%\n\tSystem mode: %lf%%\n\tIn idle: %lf%%\n", cpu_user_mode/cpu_total, cpu_system_mode/cpu_total, cpu_idle/cpu_total);
 					/*
 
 					*/
@@ -186,7 +195,7 @@ int main(int argc, char **argv){
 					/*
 						The amount and percentage of available (or free) memory
 					*/
-						printf("free memory: %lf kB\n%lf%% of total\n", mem_free, (1.0*mem_free/mem_total)*100);
+						printf("\u2022 Free memory: %lf kB\n\t\t%lf%% of total\n", mem_free, (1.0*mem_free/mem_total)*100);
 					
 					/*
 					
@@ -195,7 +204,7 @@ int main(int argc, char **argv){
 					/*
 						The rate (number of sectors per second) of disk read/write in the system
 					*/
-						printf("Disk rates: \n\tReads (sectors/second): %lf\n\tWrites (sectors/second) %lf\n", 
+						printf("\u2022 Disk rates: \n\tReads (sectors/second): %lf\n\tWrites (sectors/second) %lf\n", 
 							(disk_sectors_read/(disk_time_spent_reading)/1000),(disk_sectors_written/(disk_time_spent_writing)/1000));
 					/*
 
@@ -204,7 +213,7 @@ int main(int argc, char **argv){
 					/*
 						The rate (number per second) of context switches in the kernel
 					*/
-
+						printf("\u2022 Context switch rate in kernel: %lf\n", kernel_switch_rate);
 					/*
 
 					*/
@@ -213,11 +222,11 @@ int main(int argc, char **argv){
 					/*
 						The rate (number per second) of process creations in the system
 					*/
-						
+						printf("\u2022 Process creation rate: %lf per second\n", 1000*processes_created/uptime);
 					/*
 					
 					*/
-
+					printf("\n#############################################");
 					print_start_time = time(NULL);
 				}
 				
