@@ -5,6 +5,12 @@
 #include <string.h>
 
 #define CYCLE_RATE sysconf(_SC_CLK_TCK)
+#define RESET_CPU cpu_total=0, cpu_user_mode=0, cpu_system_mode=0, cpu_idle=0, cpu_arr=0
+#define RESET_MEM mem_total=0, mem_free=0
+#define RESET_DISK disk_sectors_read=0, disk_sectors_written=0, disk_time_spent_reading=0, disk_time_spent_writing=0, disk_arr=NULL
+#define RESET_KERNEL kernel_switches=0, kernel_switch_rate=0
+#define RESET_PROC processes_created=0
+
 
 void run_default();
 double *get_cpu_data(char *buf);
@@ -176,6 +182,11 @@ int main(int argc, char **argv){
 					*/
 
 					read_start_time = time(NULL);
+					RESET_CPU;
+					RESET_MEM;
+					RESET_DISK;
+					RESET_KERNEL;
+					RESET_PROC;
 				}
 
 				if((cur_time - print_start_time)+1 > (printout_rate)){//PRINT
