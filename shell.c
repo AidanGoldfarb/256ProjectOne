@@ -9,6 +9,7 @@
 
 char *get_current_dir_name(void);
 int count_args(char *input);
+void get_args(char *arguments, int num_args, char *input);
 void delay(int sec);
 
 int main(void){
@@ -35,26 +36,42 @@ int main(void){
 		}
 		else if(*input == '.' && *(input+1) == '/'){//EXEC program
 			int num_args = count_args(input);
-			printf("%d\n", num_args);
+			char *arguments[num_args+1];
+			memset(arguments,0,num_args*100);
+			get_args(*arguments, num_args, input);
+			//printf("Args: %s\n", *arguments);
+
 		}
 		else{
 			printf("Command '%s' not found.\nTry: sudo apt install %s\n", input, input);
 		}
 		// fflush(stdin);
 		// fflush(stdout);
-		//free(input);
+		// free(input);
 		}
 
 }
 
 int count_args(char *input){
+	char *temp = malloc(255);
+	strcpy(temp,input);
 	int res = 0;
-	input = strtok(input, " ");
-	strtok(NULL, " ");
-	while(strtok(NULL, " ") != NULL){
+	strtok(temp, " ");
+	while((temp=strtok(NULL, " ")) != NULL){
 		res++;
 	}
+	free(temp);
 	return res;
+}
+
+void get_args(char *arguments, int num_args, char *input){
+	char *temp = malloc(255);
+	strcpy(temp,input);
+	strtok(temp, " ");
+	for(int i = 0; i<num_args; i++){
+		arguments[i] = *temp;
+		temp = strtok(NULL, " ");
+	}
 }
 
 void delay(int sec){
