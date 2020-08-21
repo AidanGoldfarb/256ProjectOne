@@ -7,42 +7,54 @@
 #define WHITE  "\x1B[0m"
 #define RED  "\x1B[31m"
 
-void delay(int sec);
 char *get_current_dir_name(void);
+int count_args(char *input);
+void delay(int sec);
 
 int main(void){
 	while(1){
-		char *input = calloc(255,1);
+		char input[255];// = malloc(255);
 		char *cur_dir = get_current_dir_name();
 		printf(RED "%s" WHITE "$ ", cur_dir);
 		fgets(input, sizeof(input)+2, stdin);
 		input[strcspn(input, "\r\n")] = 0;
+		if(strcmp(input,"") == 0){
+			continue;
+		}
 		if(strcmp(input, "exit") == 0){
 			exit(0);
 		}
-		// else if(strcmp(input, "") == 0){
-		// 	fflush(stdout);
-		// 	continue;
-		// }
 		else if(*input == 'c' && *(input+1) == 'd'){
-			printf("input: %s\n", input);
 			const char *path = input+3;
-			printf("Path: %s\n", path);
 			if(chdir(path) == 0){
-				printf("Successfully changed dir\n");
+				//printf("Successfully changed dir\n");
 			}
 			else{
 				printf("Failure to change directory\n");
 			}
 		}
+		else if(*input == '.' && *(input+1) == '/'){//EXEC program
+			int num_args = count_args(input);
+			printf("%d\n", num_args);
+		}
 		else{
 			printf("Command '%s' not found.\nTry: sudo apt install %s\n", input, input);
 		}
-		fflush(stdin);
-		fflush(stdout);
-		free(input);
+		// fflush(stdin);
+		// fflush(stdout);
+		//free(input);
 		}
 
+}
+
+int count_args(char *input){
+	int res = 0;
+	input = strtok(input, " ");
+	strtok(NULL, " ");
+	while(strtok(NULL, " ") != NULL){
+		res++;
+	}
+	return res;
 }
 
 void delay(int sec){
