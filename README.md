@@ -8,8 +8,8 @@ Reads data from the kernel and prints it in an informative format.
 ### Usage
   - Run `make`
   - Execute `./proc_parse [read_rate] [print_rate]`
-  - `read_rate` specifies how frequently (in seconds) that data is read from the kernel and averaged
-  - `print_rate` specifies how frequently (in seconds) that the averages are printed to `stdout`
+    - `read_rate` specifies how frequently (in seconds) that data is read from the kernel and averaged
+    - `print_rate` specifies how frequently (in seconds) that the averages are printed to `stdout`
 ### Requirements
   - *In this part, you are asked to write a program to report the behavior of the Linux kernel. Your program should run in two different versions*
   - **Version One:**
