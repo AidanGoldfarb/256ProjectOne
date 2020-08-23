@@ -3,13 +3,16 @@
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 
 #define WHITE  "\x1B[0m"
 #define RED  "\x1B[31m"
 
 char *get_current_dir_name(void);
 int count_args(char *input);
-void get_args(char *arguments, int num_args, char *input);
+char **get_args(int num_args, char *input);
 void delay(int sec);
 
 int main(void){
@@ -35,12 +38,39 @@ int main(void){
 			}
 		}
 		else if(*input == '.' && *(input+1) == '/'){//EXEC program
+			char *program;
 			int num_args = count_args(input);
+			char *temp = malloc(255);
+			strcpy(temp,input);
+			/*
+				Parse arguments
+			*/
 			char *arguments[num_args+1];
-			memset(arguments,0,num_args*100);
-			get_args(*arguments, num_args, input);
-			//printf("Args: %s\n", *arguments);
+			strtok(temp, " ");
+			program = temp;
+			int i = 0;
+			while((temp=strtok(NULL, " ")) != NULL){
+				arguments[i++] = temp;
+			}
+			/*
+			*/
+			pid_t pid = fork();
+			if(pid == 0){//in child
+				execve(program, arguments, NULL);
+				perror("execve failed");
+				exit(EXIT_FAILURE);
+			}
+			else{//in parent
+				int waitstatus;
+				int wpid = waitpid(pid, &waitstatus, 0);
+				if(wpid != -1){
+					fprintf(stderr, "%s\n", "Process terminated");
+				}
+			}
+			
 
+
+			free(temp);
 		}
 		else{
 			printf("Command '%s' not found.\nTry: sudo apt install %s\n", input, input);
@@ -62,16 +92,6 @@ int count_args(char *input){
 	}
 	free(temp);
 	return res;
-}
-
-void get_args(char *arguments, int num_args, char *input){
-	char *temp = malloc(255);
-	strcpy(temp,input);
-	strtok(temp, " ");
-	for(int i = 0; i<num_args; i++){
-		arguments[i] = *temp;
-		temp = strtok(NULL, " ");
-	}
 }
 
 void delay(int sec){
