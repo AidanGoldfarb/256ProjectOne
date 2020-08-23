@@ -15,7 +15,15 @@ int count_args(char *input);
 char **get_args(int num_args, char *input);
 void delay(int sec);
 
+typedef struct{
+	char *job_name;
+	int job_id;
+}job_t;
+
+int num_jobs = 0;
+
 int main(void){
+	job_t jobs[255];
 	while(1){
 		char input[255];// = malloc(255);
 		char *cur_dir = get_current_dir_name();
@@ -54,6 +62,10 @@ int main(void){
 			}
 			/*
 			*/
+			job_t j 
+			jobs->job_name = program;
+			jobs->job_id = num_jobs++;
+
 			pid_t pid = fork();
 			if(pid == 0){//in child
 				execve(program, arguments, NULL);
@@ -64,7 +76,7 @@ int main(void){
 				int waitstatus;
 				int wpid = waitpid(pid, &waitstatus, 0);
 				if(wpid != -1){
-					fprintf(stderr, "%s\n", "Process terminated");
+					fprintf(stderr, "%s\n", "Process ended");
 				}
 			}
 			
