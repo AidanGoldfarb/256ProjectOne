@@ -18,12 +18,13 @@ void delay(int sec);
 typedef struct{
 	char *job_name;
 	int job_id;
+	int active;
 }job_t;
 
 int num_jobs = 0;
 
 int main(void){
-	job_t jobs[255];
+	job_t *jobs[255] = {NULL};
 	while(1){
 		char input[255];// = malloc(255);
 		char *cur_dir = get_current_dir_name();
@@ -60,11 +61,14 @@ int main(void){
 			while((temp=strtok(NULL, " ")) != NULL){
 				arguments[i++] = temp;
 			}
+			arguments[num_args] = (char *)0;
 			/*
 			*/
-			job_t j 
-			jobs->job_name = program;
-			jobs->job_id = num_jobs++;
+			job_t *job = malloc(sizeof(job_t)); 
+			job->job_name = program;
+			job->job_id = num_jobs;
+			job->active = 1;
+			jobs[num_jobs++] = job;
 
 			pid_t pid = fork();
 			if(pid == 0){//in child
@@ -77,12 +81,30 @@ int main(void){
 				int wpid = waitpid(pid, &waitstatus, 0);
 				if(wpid != -1){
 					fprintf(stderr, "%s\n", "Process ended");
+					for(int i = 0; i<num_jobs; i++){
+						job_t *cur = jobs[i];
+						if((strcmp(cur->job_name, program) == 0) && cur->active == 1){
+							cur->active = 0;
+							break;
+						}
+					}
 				}
 			}
 			
 
 
 			free(temp);
+		}
+		else if(strcmp(input, "jobs") == 0){
+			for(int i = 0; i<num_jobs; i++){
+				job_t *cur = jobs[i];
+				printf("[%d] %s", cur->job_id, cur->job_name);
+				if(cur->active == 0){
+					printf("\t%s\n", "STOPPED");
+				}else{
+					printf("\n");
+				}
+			}
 		}
 		else{
 			printf("Command '%s' not found.\nTry: sudo apt install %s\n", input, input);
