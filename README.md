@@ -36,3 +36,23 @@ Reads data from the kernel and prints it in an informative format.
          - Parsed from `/proc/stat`
        - The rate (number per second) of process creations in the system
          - Parsed from `/proc/loadavg`
+
+## Part 2
+Implements a very primitive shell that knows how to launch new programs in the foreground and the background as well as recognizes several internal commands
+
+### Usage
+ - Run `make`
+ - `./shell` to launch shell
+ 
+#### Requirements
+ - Recognizes the following internal commands
+   - exit
+     - Uses system call exit()
+   - jobs
+     - Custom naive job database
+   - cd
+     - Uses system call chdir()
+   - fg\*
+   - bg\*
+   
+     \* Not yet implemented
