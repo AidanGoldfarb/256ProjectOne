@@ -1,6 +1,13 @@
 # Prerequisites
 *.d
 
+#binaries
+*
+
+!*.*
+
+!*/
+
 # Object files
 *.o
 *.ko

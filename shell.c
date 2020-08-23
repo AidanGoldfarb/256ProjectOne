@@ -22,6 +22,7 @@ typedef struct{
 }job_t;
 
 int num_jobs = 0;
+int bg = 0; 
 
 int main(void){
 	job_t *jobs[255] = {NULL};
@@ -49,6 +50,7 @@ int main(void){
 		else if(*input == '.' && *(input+1) == '/'){//EXEC program
 			char *program;
 			int num_args = count_args(input);
+			printf("bg bit: %d\n", bg);
 			char *temp = malloc(255);
 			strcpy(temp,input);
 			/*
@@ -106,6 +108,13 @@ int main(void){
 				}
 			}
 		}
+		else if(*input == 'f' && *(input+1) == 'g'){
+			// pid_t cpgrp = getpgrp();
+   //      	tcsetpgrp(STDIN_FILENO, cpgrp);
+		}
+		else if(*input == 'b' && *(input+1) == 'g'){
+			
+		}
 		else{
 			printf("Command '%s' not found.\nTry: sudo apt install %s\n", input, input);
 		}
@@ -122,7 +131,13 @@ int count_args(char *input){
 	int res = 0;
 	strtok(temp, " ");
 	while((temp=strtok(NULL, " ")) != NULL){
-		res++;
+		if(strcmp(temp, "&") == 0){
+			bg = 1;
+		}
+		else{
+			bg = 0;
+			res++;
+		}
 	}
 	free(temp);
 	return res;
