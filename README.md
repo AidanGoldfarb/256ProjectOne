@@ -56,3 +56,5 @@ Implements a very primitive shell that knows how to launch new programs in the f
    - bg\*
    
      \* Not yet implemented
+ - Run programs
+   - `./program [arg1][arg2]...[argN]` supported
